@@ -1,0 +1,80 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:  
+  labels:  
+    app: {{ .Values.appNameZookeeper}}
+  name: {{ .Values.appNameZookeeper}}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Values.appNameZookeeper}}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.appNameZookeeper}}
+    spec:
+      containers:
+      - name: {{ .Values.appNameZookeeper}}
+        image: {{ .Values.deployment.image}}
+        readinessProbe:
+          tcpSocket:
+            port: {{ .Values.ports.zookeeper.firstPort }}
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        livenessProbe:
+          tcpSocket:
+            port: {{ .Values.ports.zookeeper.firstPort }}
+          initialDelaySeconds: 15
+          periodSeconds: 20
+        ports:
+        - containerPort: {{ .Values.ports.zookeeper.firstPort}}
+        env:
+        - name: {{ .Values.deployment.env.zookeeper.name}}
+          value: {{ .Values.deployment.env.zookeeper.value | quote }}
+        - name: {{ .Values.deployment.env.login.name}}
+          value: {{ .Values.deployment.env.login.value | quote }}
+        - name: {{ .Values.deployment.env.server.name}}
+          value: {{ .Values.appNameZookeeper | quote }}
+
+---
+
+apiVersion: v1 
+kind: ReplicationController 
+metadata:  
+  labels:  
+    app: {{ .Values.appNameKafka}} 
+  name: {{ .Values.appNameKafka}}  
+spec:  
+  replicas: 1
+  selector:  
+    app: {{ .Values.appNameKafka}}   
+  template:  
+    metadata:  
+      labels:  
+        app: {{ .Values.appNameKafka}}  
+    spec:
+      containers:
+      - name: {{ .Values.appNameKafka}} 
+        image: {{ .Values.replicationController.image}}
+        readinessProbe:
+          tcpSocket:
+            port: {{ .Values.ports.kafka }}
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        livenessProbe:
+          tcpSocket:
+            port: {{ .Values.ports.kafka }}
+          initialDelaySeconds: 15
+          periodSeconds: 20
+        ports:
+        - containerPort: {{ .Values.ports.kafka}}
+        env:
+        - name: {{ .Values.replicationController.env.connect.name}}
+          value: {{ .Values.replicationController.env.connect.value | quote }}
+        - name: {{ .Values.replicationController.env.advertisedHostname.name}}
+          value: {{ .Values.replicationController.env.advertisedHostname.value | quote }}
+        - name: {{ .Values.replicationController.env.advertisedPort.name}}
+          value: {{ .Values.ports.kafka | quote }}
+        - name: {{ .Values.replicationController.env.port.name}}
+          value: {{ .Values.ports.kafka | quote }}

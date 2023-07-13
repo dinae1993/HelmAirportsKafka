@@ -1,0 +1,40 @@
+appNameZookeeper: zookeeper
+appNameKafka: kafka
+
+ports:
+    zookeeper:
+        firstPortName: client
+        secondPortName: follower
+        thirdPortName: leader
+        firstPort: 2181
+        secondPort: 2888
+        thirdPort: 3888
+    kafka: 9092
+    protocol: TCP
+
+deployment:
+    image: bitnami/zookeeper
+    env:
+        zookeeper:
+            name: ZOOKEEPER_ID
+            value: 1
+        login:
+            name: ALLOW_ANONYMOUS_LOGIN
+            value: yes
+        server:
+            name: ZOOKEEPER_SERVER_1
+
+replicationController:
+    image: wurstmeister/kafka
+    env:
+        connect:
+            name: KAFKA_ZOOKEEPER_CONNECT
+            value: zookeeper:2181
+        advertisedHostname:
+            name: KAFKA_ADVERTISED_HOST_NAME
+            value: localhost
+        advertisedPort:
+            name: KAFKA_ADVERTISED_PORT
+        port:
+            name: KAFKA_PORT
+        

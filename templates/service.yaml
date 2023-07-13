@@ -1,0 +1,40 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.appNameZookeeper}}
+  labels:
+    app: {{ .Values.appNameZookeeper}}
+spec:
+  ports:
+  - name: {{ .Values.ports.zookeeper.firstPortName}}
+    port: {{ .Values.ports.zookeeper.firstPort}}
+    protocol: {{ .Values.ports.protocol}}
+  - name: {{ .Values.ports.zookeeper.secondPortName}}
+    port: {{ .Values.ports.zookeeper.secondPort}}
+    protocol: {{ .Values.ports.protocol}}
+  - name: {{ .Values.ports.zookeeper.thirdPortName}}
+    port: {{ .Values.ports.zookeeper.thirdPort}}
+    protocol: {{ .Values.ports.protocol}}
+  selector:
+    app: {{ .Values.appNameZookeeper}}
+
+---
+
+apiVersion: v1 
+kind: Service 
+metadata:  
+  labels:  
+    app: {{ .Values.appNameKafka}} 
+  name: {{ .Values.appNameKafka}} 
+spec:  
+  ports:
+    - name: {{ .Values.appNameKafka}}  
+      port: {{ .Values.ports.kafka}} 
+      targetPort: {{ .Values.ports.kafka}}
+      protocol: {{ .Values.ports.protocol}}
+    - name: {{ .Values.appNameZookeeper}} 
+      port: {{ .Values.ports.zookeeper.firstPort}} 
+      targetPort: {{ .Values.ports.zookeeper.firstPort}}
+      protocol: {{ .Values.ports.protocol}}
+  selector:  
+    app: {{ .Values.appNameKafka}} 

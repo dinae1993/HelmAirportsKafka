@@ -1,0 +1,14 @@
+apiVersion: v1
+entries:
+  airports-kafka:
+  - apiVersion: v2
+    appVersion: 1.16.0
+    created: "2023-07-12T11:38:51.4085012+03:00"
+    description: A Helm chart for Kubernetes
+    digest: a35aebb303931dfbff269ab61ed27d3e13ae837a6ab9d8a7f02fae6ed29eb258
+    name: airports-kafka
+    type: application
+    urls:
+    - airports-kafka-0.1.0.tgz
+    version: 0.1.0
+generated: "2023-07-12T11:38:51.4079536+03:00"
